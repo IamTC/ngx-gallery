@@ -4,7 +4,7 @@
     position: fixed;
     left: 0;
     top: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.85);
     z-index: 10000;
     display: inline-block;
 }
@@ -20,6 +20,43 @@
         height: 5%;
         align-items: center;
         padding: 0px;
+    }
+}
+
+.ngx-gallery-preview-image-index {
+    color: #FFF;
+    padding-left: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.ngx-gallery-preview-is-verified-image, .ngx-gallery-preview-close-image {
+    height: 1.3rem;
+}
+
+.ngx-gallery-preview-is-verified, .ngx-gallery-preview-close {
+    display: inline-block;
+    color: #FFF;
+    background-color: rgba(0,0,0,0.8);
+    padding: 8px;
+    img {
+        margin-right: 0.625rem;
+        filter: invert(1);
+    }
+}
+
+.ngx-gallery-preview-is-verified {
+    border-radius: 0 0.4392vw 0.4392vw 0;
+    float: left;
+}
+
+.ngx-gallery-preview-close {
+    border-radius: 0.4392vw 0 0 0.4392vw;
+    float: right;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    * {
+        cursor: pointer;
     }
 }
 
@@ -54,6 +91,7 @@
     position: absolute;
     width: 100%;
     user-select: none;
+    margin-top: 31px;
 }
 
 :host /deep/ .ngx-gallery-preview-icons {

@@ -5,12 +5,12 @@ import { Component, Input, Output, EventEmitter, } from '@angular/core';
     template: `
         <div class="ngx-gallery-arrow-wrapper ngx-gallery-arrow-left">
             <div class="ngx-gallery-icon ngx-gallery-arrow" aria-hidden="true" (click)="handlePrevClick()" [class.ngx-gallery-disabled]="prevDisabled">
-                <i class="ngx-gallery-icon-content {{arrowPrevIcon}}"></i>
+				<img [src]="arrowPrevIcon" class="ngx-gallery-icon-content">
             </div>
         </div>
         <div class="ngx-gallery-arrow-wrapper ngx-gallery-arrow-right">
             <div class="ngx-gallery-icon ngx-gallery-arrow" aria-hidden="true" (click)="handleNextClick()" [class.ngx-gallery-disabled]="nextDisabled">
-                <i class="ngx-gallery-icon-content {{arrowNextIcon}}"></i>
+				<img [src]="arrowNextIcon" class="ngx-gallery-icon-content">				
             </div>
         </div>
     `,

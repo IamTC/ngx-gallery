@@ -6,8 +6,8 @@ import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from 
         <div class="ngx-gallery-icon" [class.ngx-gallery-icon-disabled]="disabled"
             aria-hidden="true"
             title="{{ titleText }}"
-            (click)="handleClick($event)">
-                <i class="ngx-gallery-icon-content {{ icon }}"></i>
+            (click)="handleClick($event)">                
+				<img [src]="icon" class="ngx-gallery-icon-content">
         </div>`,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
