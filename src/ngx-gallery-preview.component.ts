@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ElementRef, HostListener, ViewChild, Renderer } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Output,
+    EventEmitter, OnInit, OnChanges, SimpleChanges, ElementRef, HostListener, ViewChild, Renderer } from '@angular/core';
 import { SafeResourceUrl, DomSanitizer, SafeUrl, SafeStyle } from '@angular/platform-browser';
 
 import { NgxGalleryAction } from './ngx-gallery-action.model';
@@ -9,6 +10,14 @@ import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
     template: `
         <ngx-gallery-arrows *ngIf="arrows" (onPrevClick)="showPrev()" (onNextClick)="showNext()" [prevDisabled]="!canShowPrev()" [nextDisabled]="!canShowNext()" [arrowPrevIcon]="arrowPrevIcon" [arrowNextIcon]="arrowNextIcon"></ngx-gallery-arrows>
         <div class="ngx-gallery-preview-top">
+            <div class="ngx-gallery-preview-is-verified" *ngIf="isVerified">
+                <img [src]="icons.check" class="ngx-gallery-preview-is-verified-image">
+                Verified
+            </div>
+            <div class="ngx-gallery-preview-close" (click)="close()">
+                <img [src]="icons.times" class="ngx-gallery-preview-close-image">
+                Close
+            </div>
             <div class="ngx-gallery-preview-icons">
                 <ngx-gallery-action *ngFor="let action of actions" [icon]="action.icon" [disabled]="action.disabled" [titleText]="action.titleText" (onClick)="action.onClick($event, index)"></ngx-gallery-action>
                 <a *ngIf="download && src" [href]="src" class="ngx-gallery-icon" aria-hidden="true" download>
@@ -19,7 +28,6 @@ import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
                 <ngx-gallery-action *ngIf="rotate" [icon]="rotateLeftIcon" (onClick)="rotateLeft()"></ngx-gallery-action>
                 <ngx-gallery-action *ngIf="rotate" [icon]="rotateRightIcon" (onClick)="rotateRight()"></ngx-gallery-action>
                 <ngx-gallery-action *ngIf="fullscreen" [icon]="'ngx-gallery-fullscreen ' + fullscreenIcon" (onClick)="manageFullscreen()"></ngx-gallery-action>
-                <ngx-gallery-action [icon]="'ngx-gallery-close ' + closeIcon" (onClick)="close()"></ngx-gallery-action>
             </div>
         </div>
         <div class="ngx-spinner-wrapper ngx-gallery-center" [class.ngx-gallery-active]="showSpinner">
@@ -31,6 +39,7 @@ import { NgxGalleryHelperService } from './ngx-gallery-helper.service';
                 <ngx-gallery-bullets *ngIf="bullets" [count]="images.length" [active]="index" (onChange)="showAtIndex($event)"></ngx-gallery-bullets>
             </div>
             <div class="ngx-gallery-preview-text" *ngIf="showDescription && description" [innerHTML]="description" (click)="$event.stopPropagation()"></div>
+            <div class="ngx-gallery-preview-image-index"> {{index + 1}} / {{images.length}}</div>
         </div>
     `,
     styleUrls: ['./ngx-gallery-preview.component.scss']
@@ -47,8 +56,14 @@ export class NgxGalleryPreviewComponent implements OnInit, OnChanges {
     loading = false;
     rotateValue = 0;
     index = 0;
+    isVerified = false;
 
     @Input() images: string[] | SafeResourceUrl[];
+    @Input() verifiedArr: boolean[];
+    @Input() icons: {
+        times: string,
+        check: string
+    };
     @Input() descriptions: string[];
     @Input() showDescription: boolean;
     @Input() arrows: boolean;
@@ -101,7 +116,7 @@ export class NgxGalleryPreviewComponent implements OnInit, OnChanges {
 
     constructor(private sanitization: DomSanitizer, private elementRef: ElementRef,
         private helperService: NgxGalleryHelperService, private renderer: Renderer,
-        private changeDetectorRef: ChangeDetectorRef) {}
+        private changeDetectorRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         if (this.arrows && this.arrowsAutoHide) {
@@ -112,7 +127,7 @@ export class NgxGalleryPreviewComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['swipe']) {
             this.helperService.manageSwipe(this.swipe, this.elementRef,
-            'preview', () => this.showNext(), () => this.showPrev());
+                'preview', () => this.showNext(), () => this.showPrev());
         }
     }
 
@@ -432,6 +447,7 @@ export class NgxGalleryPreviewComponent implements OnInit, OnChanges {
         this.resetPosition();
 
         this.src = this.getSafeUrl(<string>this.images[this.index]);
+        this.isVerified = this.verifiedArr[this.index];
         this.srcIndex = this.index;
         this.description = this.descriptions[this.index];
         this.changeDetectorRef.markForCheck();
